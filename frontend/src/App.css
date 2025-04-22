@@ -166,19 +166,6 @@ p {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Optimierter Lebenslauf */
-.Optimized-Output {
-  margin-top: 40px;
-  padding: 30px;
-  background-color: #1a0033;
-  border-radius: 16px;
-  max-width: 800px;
-  white-space: pre-wrap;
-  color: #eae7ff;
-  font-family: monospace;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
-}
-
 /* Headlines */
 .HeroHeadline {
   font-family: 'Playfair Display', bold;
@@ -287,4 +274,30 @@ p {
   accent-color: #7c3aed;
   transform: scale(1.2);
   cursor: pointer;
+}
+
+.Output-Box {
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  margin-top: 1rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+
+  white-space: pre-wrap;      /* Zeilen umbrechen */
+  word-wrap: break-word;      /* Lange Wörter umbrechen */
+  overflow-x: hidden;         /* Kein horizontaler Scrollbalken */
+  overflow-y: auto;           /* Optional: Falls zu lang, dann vertikal scrollen */
+  
+  font-family: 'Courier New', monospace;
+  line-height: 1.6;
+  box-sizing: border-box;
+}
+
+.Output-Box h2 {
+  text-align: center;
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
 }
