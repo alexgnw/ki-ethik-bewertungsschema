@@ -34,8 +34,33 @@ function App() {
     },
     {
       id: 5,
+      category: "DSGVO – Art. 13/14: Datenverarbeitung",
+      text: "Wurden die Betroffenen über die Datenverarbeitung informiert?",
+      options: ["Ja", "Teilweise", "Nein"]
+    },
+    {
+      id: 6,
+      category: "Nachschauen wo es steht – Nachvollziehbarkeit",
+      text: "Können Entscheidungen des Systems für Dritte nachvollzogen werden?",
+      options: ["Ja", "Teilweise", "Nein"]
+    },
+    {
+      id: 7,
       category: "EU AI Act – Menschliche Aufsicht",
       text: "Ist eine menschliche Kontrolle des KI-Systems vorgesehen?",
+      options: ["Ja", "Teilweise", "Nein"]
+    },
+    
+    {
+      id: 8,
+      category: "DSGVO – Art. 32: Stand der Technik",
+      text: "Wird das System nach dem Stand der Technik technisch und organisatorisch abgesichert?",
+      options: ["Ja", "Teilweise", "Nein"]
+    },
+    {
+      id: 9,
+      category: "EU AI Act – Diskriminierung & Bias",
+      text: "Wurden potenzielle Diskriminierungsrisiken identifiziert (z. B. durch Bias-Analysen)?",
       options: ["Ja", "Teilweise", "Nein"]
     }
   ];
