@@ -1,83 +1,117 @@
-import './App.css';
-import { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
+import "./App.css";
 
 function App() {
-  const [resumeFile, setResumeFile] = useState(null);
-  const [jobFile, setJobFile] = useState(null);
+  const [answers, setAnswers] = useState({});
   const [optimizedText, setOptimizedText] = useState("");
   const [loading, setLoading] = useState(false);
-  
 
-  const handleResumeChange = (e) => {
-    setResumeFile(e.target.files[0]);
+  const questions = [
+    {
+      id: 1,
+      category: "DSGVO – Art. 5: Datenminimierung",
+      text: "Werden nur die Daten verarbeitet, die für den vorgesehenen Zweck erforderlich sind?",
+      options: ["Ja", "Teilweise", "Nein"]
+    },
+    {
+      id: 2,
+      category: "DSGVO – Art. 22: Automatisierte Entscheidungen",
+      text: "Trifft das KI-System automatisierte Entscheidungen mit rechtlicher Wirkung für Personen?",
+      options: ["Ja", "Nein", "Unklar"]
+    },
+    {
+      id: 3,
+      category: "EU AI Act – Risikobewertung",
+      text: "Wurde geprüft, ob es sich um ein Hochrisiko-System handelt (z. B. biometrische Erkennung, kritische Infrastrukturen)?",
+      options: ["Ja", "Nein", "Noch nicht"]
+    },
+    {
+      id: 4,
+      category: "EU AI Act – Transparenz",
+      text: "Wird klar und verständlich kommuniziert, dass ein KI-System verwendet wird?",
+      options: ["Ja", "Teilweise", "Nein"]
+    },
+    {
+      id: 5,
+      category: "EU AI Act – Menschliche Aufsicht",
+      text: "Ist eine menschliche Kontrolle des KI-Systems vorgesehen?",
+      options: ["Ja", "Teilweise", "Nein"]
+    }
+  ];
+
+  const handleAnswerChange = (id, value) => {
+    setAnswers((prev) => ({ ...prev, [id]: value }));
   };
 
-  const handleJobChange = (e) => {
-    setJobFile(e.target.files[0]);
-  };
+  const handleOptimize = async () => {
+    setLoading(true);
 
-  const handleSubmit = async () => {
-    if (!resumeFile || !jobFile) return;
+    const prompt = `
+    Bitte bewerte das folgende KI-System im Hinblick auf DSGVO- und EU AI Act-Konformität anhand der Antworten:
 
-    const formData = new FormData();
-    formData.append("resume", resumeFile);
-    formData.append("job_description", jobFile);
+${questions.map(q => `Frage: ${q.text}\nAntwort: ${answers[q.id] || "Nicht beantwortet"}`).join("\n\n")}
+
+Gib eine kurze Einschätzung und konkrete Empfehlungen.
+`;
 
     try {
-      setLoading(true);
-      const response = await axios.post("http://localhost:8000/analyze/", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      const response = await axios.post("http://localhost:8000/analyze-ethics", {
+        prompt: prompt,
       });
-      setOptimizedText(response.data.optimized_resume);
+
+      setOptimizedText(response.data.result);
     } catch (error) {
-      console.error("Fehler beim Hochladen:", error);
-    }
-      finally {
+      console.error("Fehler bei der Auswertung:", error);
+      setOptimizedText("Ein Fehler ist aufgetreten.");
+    } finally {
       setLoading(false);
     }
   };
 
   return (
     <div className="PageWrapper">
-      <div className="Navbar">
+
+<div className="Navbar">
         <div className="Navbar-Left">
-          <div className="Logo">🧠 AI-Review</div>
-          <a href="/login">Use Cases</a>
-          <a href="/login">Products</a>
-          <a href="/login">Pricing</a>
+          <div className="Logo">Ethik-KI-Check</div>
+          <a href="/login">Anwendungsbereiche</a>
+          <a href="/login">Ethische Grundlage</a>
         </div>
         <div className="Navbar-Right">
           <a href="/login" className="Login">Log in</a>
-          <a href="/login" className="TryFree">Try for free</a>
+          <a href="/login" className="TryFree">Jetzt ausprobieren</a>
         </div>
       </div>
 
       <div className="App">
-      <h1 className="HeroHeadline">Mache deinen Lebenslauf</h1>
-      <h1 className="HeroSubline">
-        <span className="Colorful orange">Besser</span>,&nbsp;
-        <span className="Colorful yellow">Schöner</span>&amp;
-        <span className="Colorful teal">Smarter</span> <span className="Colorful white">mit AI</span>
-      </h1>
-        <h3>
-          Die einzige Plattform die du für deinen Lebenslauf brauchst.
-        </h3>
+        <h1>KI-Ethik Bewertungstool</h1>
 
-        <p>Laden Sie Ihren Lebenslauf hoch</p>
-        <label className="Upload-Box">
-          <input type="file" accept=".pdf, image/*" onChange={handleResumeChange} />
-          <span>{resumeFile ? resumeFile.name : "Datei auswählen"}</span>
-        </label>
+        <p>Beantworten Sie die folgenden Fragen zur DSGVO- und EU AI Act-Konformität:</p>
 
-        <p>Laden Sie jetzt die Stellenbeschreibung hoch</p>
-        <label className="Upload-Box">
-          <input type="file" accept=".pdf, image/*" onChange={handleJobChange} />
-          <span>{jobFile ? jobFile.name : "Datei auswählen"}</span>
-        </label>
-
-        <button className="Generieren-Button" onClick={handleSubmit}>
-          Jetzt verbessern!
+        <div className="Questionnaire">
+          {questions.map((q) => (
+            <div key={q.id} className="Question">
+              <h3>{q.category}</h3>
+              <p>{q.text}</p>
+              {q.options.map((option) => (
+                <label key={option} className="Option">
+                  <input
+                    type="radio"
+                    name={`question-${q.id}`}
+                    value={option}
+                    checked={answers[q.id] === option}
+                    onChange={() => handleAnswerChange(q.id, option)}
+                  />
+                  {option}
+                </label>
+              ))}
+            </div>
+          ))}
+        </div>
+        
+        <button className="Generieren-Button" onClick={handleOptimize} disabled={loading}>
+          {loading ? "Wird ausgewertet..." : "Auswertung starten"}
         </button>
 
         {loading && (
@@ -89,10 +123,12 @@ function App() {
         )}
 
         {optimizedText && (
-          <div className="Optimized-Output">
-            <h2>Optimierter Lebenslauf</h2>
-            <pre>{optimizedText}</pre>
-          </div>
+          <>
+            <h2>Ergebnis:</h2>
+            <div className="Output-Box">
+              <pre>{optimizedText}</pre>
+            </div>
+          </>
         )}
       </div>
     </div>

@@ -139,36 +139,7 @@ p {
   margin: 0;
 }
 
-/* Upload-Stil */
-.Upload-Box {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 280px;
-  height: 70px;
-  border: 2px dashed #a078ff;
-  border-radius: 12px;
-  background-color: #350074;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
 
-.Upload-Box:hover {
-  border-color: #fff;
-  background-color: #4a00b8;
-  color: #fff;
-}
-
-.Upload-Box input {
-  display: none;
-}
-
-.Upload-Box span {
-  display: block;
-  font-weight: 500;
-  font-size: 16px;
-  color: #e6ddff;
-}
 
 /* Button */
 .Generieren-Button {
@@ -234,21 +205,6 @@ p {
   font-weight: 700;
 }
 
-.orange {
-  color: #ff7d1a;
-}
-
-.yellow {
-  color: #ffcc00;
-}
-
-.teal {
-  color: #00e0d3;
-}
-
-.white {
-  color: white;
-}
 
 .ProgressBarWrapper {
   margin-top: 12px;
@@ -277,4 +233,58 @@ p {
   100% {
     transform: translateX(100%);
   }
+}
+
+/* ==== Fragenkatalog-Stil ==== */
+
+.Questionnaire {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Fragenkarten optisch hervorheben */
+.Question {
+  padding: 2rem;
+  border-radius: 16px;
+  background-color: white;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
+  color: #1a1a1a;
+  width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* Kategorieüberschrift */
+.Question h3 {
+  font-size: 1.1rem;
+  color: #31005f;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+/* Frage selbst */
+.Question p {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 1rem;
+}
+
+/* Option-Layout */
+.Option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.4rem 0;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.Option input[type="radio"] {
+  accent-color: #7c3aed;
+  transform: scale(1.2);
+  cursor: pointer;
 }

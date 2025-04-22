@@ -1,50 +1,47 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from resume_processor import extract_resume_text
-from job_parser import extract_job_text
-from optimizer import optimize_resume, optimize_resume_with_image
-import filetype  # statt imghdr (Python 3.13 kompatibel)
+from openai import OpenAI
+import os
 
 app = FastAPI()
 
-# CORS aktivieren, damit das Frontend (React) mit dem Backend kommunizieren darf
+# CORS aktivieren – erlaubt Zugriff vom Frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["*"],  # für lokale Entwicklung, in Produktion besser einschränken
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-@app.post("/analyze/")
-async def analyze(
-    resume: UploadFile = File(...),
-    job_description: UploadFile = File(...)
-):
-    # PDF-Dateien als Bytes einlesen
-    resume_bytes = await resume.read()
-    job_bytes = await job_description.read()
+# OpenAI API-Client
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-    # Lebenslauf immer in Text umwandeln
-    resume_text = extract_resume_text(resume_bytes)
+@app.post("/analyze-ethics")
+async def analyze_ethics(request: Request):
+    data = await request.json()
+    prompt = data.get("prompt", "")
 
-    # Typ der Stellenanzeige erkennen (Bild oder PDF?)
-    kind = filetype.guess(job_bytes)
+    if not prompt:
+        return {"result": "Kein Prompt empfangen."}
 
-    if kind and kind.mime.startswith("image/"):
-        # 📸 Wenn Bild: direkt an GPT-4o übergeben
-        image_format = kind.extension  # z. B. 'jpeg', 'png'
-        optimized_resume = optimize_resume_with_image(resume_text, job_bytes, image_format)
-    else:
-        # 📄 Wenn PDF/Text: extrahiere Text wie bisher
-        job_text = extract_job_text(job_bytes)
-        optimized_resume = optimize_resume(resume_text, job_text)
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "Du bist ein KI-Ethikexperte. Analysiere die DSGVO- und EU AI Act-Konformität eines Systems auf Basis der gegebenen Antworten. "
+                    "Gib eine kurze Einschätzung und konkrete Empfehlungen in klarer Sprache."
+                )
+            },
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+        temperature=0.4,
+        max_tokens=1000
+    )
 
-    return {
-        "optimized_resume": optimized_resume
-    }
-
-# Starte den Server direkt über `python main.py`
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="localhost", port=8000)
+    return {"result": response.choices[0].message.content}
