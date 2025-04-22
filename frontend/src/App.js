@@ -126,7 +126,7 @@ Gib eine kurze Einschätzung und konkrete Empfehlungen.
           <>
             <h2>Ergebnis:</h2>
             <div className="Output-Box">
-              <pre>{optimizedText}</pre>
+              <div>{optimizedText}</div>
             </div>
           </>
         )}
