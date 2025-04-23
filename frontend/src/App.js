@@ -191,16 +191,18 @@ Wichtig: Gib die **Gesamtbewertung nur einmal ganz am Anfang** der Antwort an â€
         )}
 
         {ampel && (
+          <>
+          <h2>Ergebnis:</h2>
           <div className="AmpelWrapper">
             <div className={`AmpelCircle ${ampel === "red" ? "active" : ""} red`} />
             <div className={`AmpelCircle ${ampel === "yellow" ? "active" : ""} yellow`} />
             <div className={`AmpelCircle ${ampel === "green" ? "active" : ""} green`} />
           </div>
+          </>
         )}
 
         {optimizedText && (
           <>
-            <h2>Ergebnis:</h2>
             <div className="Output-Box">
               <div dangerouslySetInnerHTML={{ __html: formatOutput(optimizedText) }} />
             </div>
