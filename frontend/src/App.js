@@ -142,20 +142,26 @@ Wichtig: Gib die **Gesamtbewertung nur einmal ganz am Anfang** der Antwort an �
 
 <div className="Navbar">
         <div className="Navbar-Left">
-          <div className="Logo">Ethik-KI-Check</div>
+          <div className="Logo">
+            <span role="img" aria-label="waage" className="Logo-Icon">⚖️</span> Ethik-KI-Check
+          </div>
           <a href="/login">Anwendungsbereiche</a>
-          <a href="/login">Ethische Grundlage</a>
+          <a href="/login">Rechtsgrundlage</a>
         </div>
         <div className="Navbar-Right">
-          <a href="/login" className="Login">Log in</a>
-          <a href="/login" className="TryFree">Jetzt ausprobieren</a>
+          <a href="/login" className="Login">Hilfe</a>
+          <a href="/login" className="TryFree">Über das Projekt</a>
         </div>
       </div>
 
       <div className="App">
-        <h1>KI-Ethik Bewertungstool</h1>
+      <h1 className="HeroHeadline">
+      KI-Systeme <span className="AccentLegal">rechtssicher</span><br />
+      und <span className="AccentEthical">ethisch</span> bewerten
+      </h1>
 
-        <p>Beantworten Sie die folgenden Fragen zur DSGVO- und EU AI Act-Konformität:</p>
+        <p>Beantworten Sie die folgenden Fragen zur DSGVO- und EU AI Act-Konformität, um eine fundierte Einschätzung über die ethische und rechtliche Verträglichkeit Ihres KI-Systems zu erhalten.<br></br>
+        Unser Tool unterstützt öffentliche Einrichtungen dabei, Verantwortung und Transparenz<br></br>beim Einsatz künstlicher Intelligenz sicherzustellen.</p>
 
         <div className="Questionnaire">
           {questions.map((q) => (
