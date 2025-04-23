@@ -135,7 +135,7 @@ h3 {
 
 p {
   font-size: 1rem;
-  color: #d0bdfc;
+  color: #e2d5ff;
   margin: 0;
 }
 
@@ -291,7 +291,7 @@ p {
   overflow-x: hidden;         /* Kein horizontaler Scrollbalken */
   overflow-y: auto;           /* Optional: Falls zu lang, dann vertikal scrollen */
   
-  font-family: 'Courier New', monospace;
+  font-family: 'Comic Sans', monospace;
   line-height: 1.6;
   box-sizing: border-box;
 }
@@ -301,3 +301,40 @@ p {
   font-size: 1.75rem;
   margin-bottom: 1rem;
 }
+
+.Output-Box h3 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 1.2em;
+  color: #333;
+}
+
+.Output-Box p {
+  margin: 0.5em 0;
+  line-height: 1.6;
+}
+
+.AmpelWrapper {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0;
+  justify-content: center;
+}
+
+.AmpelCircle {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  opacity: 0.3;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+}
+
+.red { background-color: red; }
+.yellow { background-color: yellow; }
+.green { background-color: green; }
+
+.AmpelCircle.active {
+  opacity: 1;
+  box-shadow: 0 0 10px 2px rgba(0,0,0,0.3);
+}
+

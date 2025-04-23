@@ -6,6 +6,7 @@ function App() {
   const [answers, setAnswers] = useState({});
   const [optimizedText, setOptimizedText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [ampel, setAmpel] = useState(null);
 
   const questions = [
     {
@@ -22,48 +23,66 @@ function App() {
     },
     {
       id: 3,
+      category: "DSGVO – Art. 5 Abs.2 & EU AI Act: Rechenschaftspflicht",
+      text: "Ist klar geregelt, wer für den KI-Einsatz verantwortlich ist (inkl. Dokumentation)",
+      options: ["Ja", "Nein", "Unklar"]
+    },
+    {
+      id: 4,
       category: "EU AI Act – Risikobewertung",
       text: "Wurde geprüft, ob es sich um ein Hochrisiko-System handelt (z. B. biometrische Erkennung, kritische Infrastrukturen)?",
       options: ["Ja", "Nein", "Noch nicht"]
     },
     {
-      id: 4,
+      id: 5,
       category: "EU AI Act – Transparenz",
       text: "Wird klar und verständlich kommuniziert, dass ein KI-System verwendet wird?",
       options: ["Ja", "Teilweise", "Nein"]
     },
     {
-      id: 5,
+      id: 6,
       category: "DSGVO – Art. 13/14: Datenverarbeitung",
       text: "Wurden die Betroffenen über die Datenverarbeitung informiert?",
       options: ["Ja", "Teilweise", "Nein"]
     },
     {
-      id: 6,
-      category: "Nachschauen wo es steht – Nachvollziehbarkeit",
+      id: 7,
+      category: "Europakommission – Nachvollziehbarkeit",
       text: "Können Entscheidungen des Systems für Dritte nachvollzogen werden?",
       options: ["Ja", "Teilweise", "Nein"]
     },
     {
-      id: 7,
+      id: 8,
       category: "EU AI Act – Menschliche Aufsicht",
       text: "Ist eine menschliche Kontrolle des KI-Systems vorgesehen?",
       options: ["Ja", "Teilweise", "Nein"]
-    },
-    
-    {
-      id: 8,
-      category: "DSGVO – Art. 32: Stand der Technik",
-      text: "Wird das System nach dem Stand der Technik technisch und organisatorisch abgesichert?",
-      options: ["Ja", "Teilweise", "Nein"]
-    },
+    },  
     {
       id: 9,
       category: "EU AI Act – Diskriminierung & Bias",
       text: "Wurden potenzielle Diskriminierungsrisiken identifiziert (z. B. durch Bias-Analysen)?",
       options: ["Ja", "Teilweise", "Nein"]
+    },
+    {
+      id: 10,
+      category: "DSGVO – Art. 32: Stand der Technik",
+      text: "Wird das System nach dem Stand der Technik technisch und organisatorisch abgesichert?",
+      options: ["Ja", "Teilweise", "Nein"]
+    },
+    {
+      id: 11,
+      category: "EU AI Act – Dokumentationspflicht",
+      text: "Liegt eine technische Dokumentation mit Angaben zur Funktionsweise, Datenquellen und Trainingsmethoden vor?",
+      options: ["Ja", "Teilweise", "Nein"]
     }
   ];
+
+  const detectAmpelFromText = (text) => {
+    if (text.includes("🟢")) return "green";
+    if (text.includes("🟡")) return "yellow";
+    if (text.includes("🔴")) return "red";
+    return null;
+  };
 
   const handleAnswerChange = (id, value) => {
     setAnswers((prev) => ({ ...prev, [id]: value }));
@@ -78,6 +97,13 @@ function App() {
 ${questions.map(q => `Frage: ${q.text}\nAntwort: ${answers[q.id] || "Nicht beantwortet"}`).join("\n\n")}
 
 Gib eine kurze Einschätzung und konkrete Empfehlungen.
+
+Verwende zusätzlich eine Gesamtbewertung in Form eines Ampelsystems:
+- 🟢 für konform
+- 🟡 für teilweise erfüllt
+- 🔴 für kritisch
+
+Wichtig: Gib die **Gesamtbewertung nur einmal ganz am Anfang** der Antwort an – verwende keine weiteren Ampel-Emojis im Text oder bei den Empfehlungen.
 `;
 
     try {
@@ -85,14 +111,31 @@ Gib eine kurze Einschätzung und konkrete Empfehlungen.
         prompt: prompt,
       });
 
+
+      const resultText = response.data.result;
+      setAmpel(detectAmpelFromText(resultText));
+      setOptimizedText(resultText);
+
       setOptimizedText(response.data.result);
     } catch (error) {
       console.error("Fehler bei der Auswertung:", error);
       setOptimizedText("Ein Fehler ist aufgetreten.");
+      setAmpel(null); // Zurücksetzen im Fehlerfall
     } finally {
       setLoading(false);
     }
   };
+
+
+  //Output lesbarer formatieren
+  const formatOutput = (text) => {
+    return text
+      .replace(/Einschätzung:/g, "<h3><strong>Einschätzung:</strong></h3>")
+      .replace(/Empfehlungen:/g, "<h3><strong>Empfehlungen:</strong></h3>")
+      .replace(/(\\d+\\.\\s)/g, "<p><strong>$1</strong>") // optional für nummerierte Listen
+      .replace(/\\n/g, "<br>"); // Zeilenumbrüche beibehalten
+  };
+
 
   return (
     <div className="PageWrapper">
@@ -147,11 +190,21 @@ Gib eine kurze Einschätzung und konkrete Empfehlungen.
           </div>
         )}
 
+        {ampel && (
+          <>
+          <h2>Ergebnis:</h2>
+          <div className="AmpelWrapper">
+            <div className={`AmpelCircle ${ampel === "red" ? "active" : ""} red`} />
+            <div className={`AmpelCircle ${ampel === "yellow" ? "active" : ""} yellow`} />
+            <div className={`AmpelCircle ${ampel === "green" ? "active" : ""} green`} />
+          </div>
+          </>
+        )}
+
         {optimizedText && (
           <>
-            <h2>Ergebnis:</h2>
             <div className="Output-Box">
-              <div>{optimizedText}</div>
+              <div dangerouslySetInnerHTML={{ __html: formatOutput(optimizedText) }} />
             </div>
           </>
         )}

@@ -32,7 +32,7 @@ async def analyze_ethics(request: Request):
                 "role": "system",
                 "content": (
                     "Du bist ein KI-Ethikexperte. Analysiere die DSGVO- und EU AI Act-Konformität eines Systems auf Basis der gegebenen Antworten. "
-                    "Gib eine kurze Einschätzung und konkrete Empfehlungen in klarer Sprache."
+                    "Gib eine kurze Einschätzung und konkrete Empfehlungen."
                 )
             },
             {
