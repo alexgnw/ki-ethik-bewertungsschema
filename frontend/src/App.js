@@ -126,6 +126,17 @@ Wichtig: Gib die **Gesamtbewertung nur einmal ganz am Anfang** der Antwort an �
     }
   };
 
+
+  //Output lesbarer formatieren
+  const formatOutput = (text) => {
+    return text
+      .replace(/Einschätzung:/g, "<h3><strong>Einschätzung:</strong></h3>")
+      .replace(/Empfehlungen:/g, "<h3><strong>Empfehlungen:</strong></h3>")
+      .replace(/(\\d+\\.\\s)/g, "<p><strong>$1</strong>") // optional für nummerierte Listen
+      .replace(/\\n/g, "<br>"); // Zeilenumbrüche beibehalten
+  };
+
+
   return (
     <div className="PageWrapper">
 
@@ -191,7 +202,7 @@ Wichtig: Gib die **Gesamtbewertung nur einmal ganz am Anfang** der Antwort an �
           <>
             <h2>Ergebnis:</h2>
             <div className="Output-Box">
-              <div>{optimizedText}</div>
+              <div dangerouslySetInnerHTML={{ __html: formatOutput(optimizedText) }} />
             </div>
           </>
         )}

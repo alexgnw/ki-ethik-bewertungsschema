@@ -291,7 +291,7 @@ p {
   overflow-x: hidden;         /* Kein horizontaler Scrollbalken */
   overflow-y: auto;           /* Optional: Falls zu lang, dann vertikal scrollen */
   
-  font-family: 'Courier New', monospace;
+  font-family: 'Comic Sans', monospace;
   line-height: 1.6;
   box-sizing: border-box;
 }
@@ -300,6 +300,18 @@ p {
   text-align: center;
   font-size: 1.75rem;
   margin-bottom: 1rem;
+}
+
+.Output-Box h3 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 1.2em;
+  color: #333;
+}
+
+.Output-Box p {
+  margin: 0.5em 0;
+  line-height: 1.6;
 }
 
 .AmpelWrapper {
@@ -325,3 +337,4 @@ p {
   opacity: 1;
   box-shadow: 0 0 10px 2px rgba(0,0,0,0.3);
 }
+
